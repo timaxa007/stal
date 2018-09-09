@@ -43,8 +43,8 @@ public class RadiationCommand extends CommandBase {
 			if (zsw == null) return;
 
 			if (args[1].equalsIgnoreCase(w[0]) && args.length >= 4) {
-				//zsw.createZoneSaved(args[2], (int)player.posX, (int)player.posY, (int)player.posZ);
-				zsw.createRadiationZone(player.posX, player.posY, player.posZ, Float.parseFloat(args[2]), Integer.parseInt(args[3]));
+				//zsw.createPointSaved(args[2], (int)player.posX, (int)player.posY, (int)player.posZ);
+				zsw.createRadiationPoint(player.posX, player.posY, player.posZ, Float.parseFloat(args[2]), Integer.parseInt(args[3]));
 			}
 
 			else if (args[1].equalsIgnoreCase(w[1])) {

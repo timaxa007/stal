@@ -16,35 +16,48 @@ public class RadiationWSD extends WorldSavedData {
 	public final ArrayList<RadiationChunk>
 	loadedChunk = new ArrayList<RadiationChunk>(),
 	unloadedChunk = new ArrayList<RadiationChunk>();
+	public final ArrayList<RadiationPoint> radiationPointsWorld = new ArrayList<RadiationPoint>();
 
 	public RadiationWSD(String tag) {
 		super(tag);
 	}
 
 	@Deprecated
-	public void createRadiationZone(final net.minecraft.util.Vec3 vec3, final float radius, final int radMax) {
-		createRadiationZone(vec3.xCoord, vec3.yCoord, vec3.zCoord, radius, radMax);
+	public void createRadiationPoint(final net.minecraft.util.Vec3 vec3, final float radius, final int radMax) {
+		createRadiationPoint(vec3.xCoord, vec3.yCoord, vec3.zCoord, radius, radMax);
 	}
 
-	public void createRadiationZone(final double xCoord, final double yCoord, final double zCoord, final float radius, final int radMax) {
+	public void createRadiationPoint(final double xCoord, final double yCoord, final double zCoord, final float radius, final int radMax) {
+		if ((int)radius / 16 < 8)
+			createRadiationPointChunk(xCoord, yCoord, zCoord, radius, radMax);
+		else
+			radiationPointsWorld.add(new RadiationPoint(xCoord, yCoord, zCoord, radius, radMax));
+	}
+	
+	@Deprecated
+	public void createRadiationPointChunk(final net.minecraft.util.Vec3 vec3, final float radius, final int radMax) {
+		createRadiationPointChunk(vec3.xCoord, vec3.yCoord, vec3.zCoord, radius, radMax);
+	}
+
+	public void createRadiationPointChunk(final double xCoord, final double yCoord, final double zCoord, final float radius, final int radMax) {
 		int chunkX = (int)xCoord / 16;
 		int chunkZ = (int)zCoord / 16;
 		RadiationChunk rc = null;
 
 		if (rc == null && !loadedChunk.isEmpty())
 			for (int i = 0; i < loadedChunk.size(); ++i) {
-				RadiationChunk rzc = loadedChunk.get(i);
-				if (rzc.chunkX == chunkX && rzc.chunkZ == chunkZ) {
-					rc = rzc;
+				RadiationChunk rpc = loadedChunk.get(i);
+				if (rpc.chunkX == chunkX && rpc.chunkZ == chunkZ) {
+					rc = rpc;
 					break;
 				}
 			}
 
 		if (rc == null && !unloadedChunk.isEmpty())
 			for (int i = 0; i < unloadedChunk.size(); ++i) {
-				RadiationChunk rzc = unloadedChunk.get(i);
-				if (rzc.chunkX == chunkX && rzc.chunkZ == chunkZ) {
-					rc = rzc;
+				RadiationChunk rpc = unloadedChunk.get(i);
+				if (rpc.chunkX == chunkX && rpc.chunkZ == chunkZ) {
+					rc = rpc;
 					break;
 				}
 			}
@@ -52,7 +65,7 @@ public class RadiationWSD extends WorldSavedData {
 		if (rc == null) rc = new RadiationChunk(chunkX, chunkZ);
 
 		if (rc != null) {
-			rc.zones.add(new RadiationZone(xCoord, yCoord, zCoord, radius, radMax));
+			rc.points.add(new RadiationPoint(xCoord, yCoord, zCoord, radius, radMax));
 			if (world.getChunkProvider().chunkExists(chunkX, chunkZ))
 				loadedChunk.add(rc);
 			else
@@ -64,9 +77,9 @@ public class RadiationWSD extends WorldSavedData {
 	public void chunkLoad(Chunk chunk) {
 		if (unloadedChunk.isEmpty()) return;
 		for (int i = 0; i < unloadedChunk.size(); ++i) {
-			RadiationChunk rzc = unloadedChunk.get(i);
-			if (rzc.chunkX == chunk.xPosition && rzc.chunkZ == chunk.zPosition) {
-				loadedChunk.add(rzc);
+			RadiationChunk rpc = unloadedChunk.get(i);
+			if (rpc.chunkX == chunk.xPosition && rpc.chunkZ == chunk.zPosition) {
+				loadedChunk.add(rpc);
 				unloadedChunk.remove(i);
 				break;
 			}
@@ -76,9 +89,9 @@ public class RadiationWSD extends WorldSavedData {
 	public void chunkUnload(Chunk chunk) {
 		if (loadedChunk.isEmpty()) return;
 		for (int i = 0; i < loadedChunk.size(); ++i) {
-			RadiationChunk rzc = loadedChunk.get(i);
-			if (rzc.chunkX == chunk.xPosition && rzc.chunkZ == chunk.zPosition) {
-				unloadedChunk.add(rzc);
+			RadiationChunk rpc = loadedChunk.get(i);
+			if (rpc.chunkX == chunk.xPosition && rpc.chunkZ == chunk.zPosition) {
+				unloadedChunk.add(rpc);
 				loadedChunk.remove(i);
 				break;
 			}
@@ -106,19 +119,19 @@ public class RadiationWSD extends WorldSavedData {
 		NBTTagCompound tag = null;
 		for (int i = 0; i < list.tagCount(); ++i) {
 			tag = list.getCompoundTagAt(i);
-			if (!tag.hasKey("zones", NBT.TAG_LIST) ||
+			if (!tag.hasKey("points", NBT.TAG_LIST) ||
 					!tag.hasKey("chunkX", NBT.TAG_INT) || !tag.hasKey("chunkZ", NBT.TAG_INT)) continue;
 			RadiationChunk rc = new RadiationChunk(tag.getInteger("chunkX"), tag.getInteger("chunkZ"));
-			NBTTagList zones = tag.getTagList("zones", NBT.TAG_COMPOUND);
-			NBTTagCompound zone = null;
-			for (int j = 0; j < zones.tagCount(); ++j) {
-				zone = zones.getCompoundTagAt(j);
-				rc.zones.add(new RadiationZone(
-						zone.getDouble("x"),
-						zone.getDouble("y"),
-						zone.getDouble("z"),
-						zone.getFloat("r"),
-						zone.getInteger("radMax")
+			NBTTagList points = tag.getTagList("points", NBT.TAG_COMPOUND);
+			NBTTagCompound point = null;
+			for (int j = 0; j < points.tagCount(); ++j) {
+				point = points.getCompoundTagAt(j);
+				rc.points.add(new RadiationPoint(
+						point.getDouble("x"),
+						point.getDouble("y"),
+						point.getDouble("z"),
+						point.getFloat("r"),
+						point.getInteger("radMax")
 						));
 			}
 			unloadedChunk.add(rc);
@@ -132,55 +145,55 @@ public class RadiationWSD extends WorldSavedData {
 
 		if (!unloadedChunk.isEmpty())
 			for (int i = 0; i < unloadedChunk.size(); ++i) {
-				RadiationChunk rzc = unloadedChunk.get(i);
-				if (rzc.zones.isEmpty()) continue;
+				RadiationChunk rpc = unloadedChunk.get(i);
+				if (rpc.points.isEmpty()) continue;
 
 				tag = new NBTTagCompound();
 
-				tag.setInteger("chunkX", rzc.chunkX);
-				tag.setInteger("chunkZ", rzc.chunkZ);
+				tag.setInteger("chunkX", rpc.chunkX);
+				tag.setInteger("chunkZ", rpc.chunkZ);
 
-				NBTTagList zones = new NBTTagList();
-				NBTTagCompound zone = null;
-				for (int j = 0; j < rzc.zones.size(); ++j) {
-					zone = new NBTTagCompound();
-					RadiationZone rz = rzc.zones.get(j);
-					zone.setDouble("x", rz.posX);
-					zone.setDouble("y", rz.posY);
-					zone.setDouble("z", rz.posZ);
-					zone.setFloat("r", rz.radius);
-					zone.setInteger("radMax", rz.radiationMax);
-					zones.appendTag(zone);
+				NBTTagList points = new NBTTagList();
+				NBTTagCompound point = null;
+				for (int j = 0; j < rpc.points.size(); ++j) {
+					point = new NBTTagCompound();
+					RadiationPoint rp = rpc.points.get(j);
+					point.setDouble("x", rp.posX);
+					point.setDouble("y", rp.posY);
+					point.setDouble("z", rp.posZ);
+					point.setFloat("r", rp.radius);
+					point.setInteger("radMax", rp.radiationMax);
+					points.appendTag(point);
 				}
-				tag.setTag("zones", zones);
+				tag.setTag("points", points);
 
 				list.appendTag(tag);
 			}
 
 		if (!loadedChunk.isEmpty())
 			for (int i = 0; i < loadedChunk.size(); ++i) {
-				RadiationChunk rzc = loadedChunk.get(i);
-				if (rzc.zones.isEmpty()) continue;
+				RadiationChunk rpc = loadedChunk.get(i);
+				if (rpc.points.isEmpty()) continue;
 
 				tag = new NBTTagCompound();
 
-				tag.setInteger("chunkX", rzc.chunkX);
-				tag.setInteger("chunkZ", rzc.chunkZ);
+				tag.setInteger("chunkX", rpc.chunkX);
+				tag.setInteger("chunkZ", rpc.chunkZ);
 
-				NBTTagList zones = new NBTTagList();
-				NBTTagCompound zone = null;
-				for (int j = 0; j < rzc.zones.size(); ++j) {
-					zone = new NBTTagCompound();
-					RadiationZone rz = rzc.zones.get(j);
-					zone.setDouble("x", rz.posX);
-					zone.setDouble("y", rz.posY);
-					zone.setDouble("z", rz.posZ);
-					zone.setFloat("r", rz.radius);
-					zone.setInteger("radMax", rz.radiationMax);
-					zones.appendTag(zone);
+				NBTTagList points = new NBTTagList();
+				NBTTagCompound point = null;
+				for (int j = 0; j < rpc.points.size(); ++j) {
+					point = new NBTTagCompound();
+					RadiationPoint rp = rpc.points.get(j);
+					point.setDouble("x", rp.posX);
+					point.setDouble("y", rp.posY);
+					point.setDouble("z", rp.posZ);
+					point.setFloat("r", rp.radius);
+					point.setInteger("radMax", rp.radiationMax);
+					points.appendTag(point);
 				}
-				if (zones.tagCount() > 0)
-					tag.setTag("zones", zones);
+				if (points.tagCount() > 0)
+					tag.setTag("points", points);
 				list.appendTag(tag);
 			}
 

@@ -5,7 +5,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import timaxa007.stalker.StalkerPlayerIEEP;
 import timaxa007.stalker.radiation.RadiationChunk;
 import timaxa007.stalker.radiation.RadiationWSD;
-import timaxa007.stalker.radiation.RadiationZone;
+import timaxa007.stalker.radiation.RadiationPoint;
 import timaxa007.stalker.register.Parameters;
 
 public class EventsFML {
@@ -25,11 +25,11 @@ public class EventsFML {
 
 			for (int i = 0; i < rwsd.loadedChunk.size(); ++i) {
 				RadiationChunk rc = rwsd.loadedChunk.get(i);
-				for (int j = 0; j < rc.zones.size(); ++j) {
-					RadiationZone rz = rc.zones.get(j);
-					double distance = rz.distanceTo(event.player.posX, event.player.posY, event.player.posZ);
-					if (distance <= rz.radius) {
-						rad += (int)((1F - ((float)distance / rz.radius)) * (float)rz.radiationMax);
+				for (int j = 0; j < rc.points.size(); ++j) {
+					RadiationPoint rp = rc.points.get(j);
+					double distance = rp.distanceTo(event.player.posX, event.player.posY, event.player.posZ);
+					if (distance <= rp.radius) {
+						rad += (int)((1F - ((float)distance / rp.radius)) * (float)rp.radiationMax);
 					}
 				}
 			}
