@@ -17,7 +17,7 @@ public class PotionBleeding extends PotionAttackDamage {
 	@Override
 	public void performEffect(EntityLivingBase entity, int amplifier) {
 		if (amplifier % 10 == 0) {
-			entity.attackEntityFrom(StalkerMod.damage_bleeding, 1F);
+			//entity.attackEntityFrom(StalkerMod.damage_bleeding, 1F);
 		}
 	}
 }

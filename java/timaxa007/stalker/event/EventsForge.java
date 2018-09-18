@@ -60,7 +60,9 @@ public class EventsForge {
 
 		PotionEffect pe = event.entityLiving.getActivePotionEffect(StalkerMod.potion_bleeding);
 		if (pe != null) {
-			event.entityLiving.addPotionEffect(new PotionEffect(StalkerMod.potion_bleeding.id, pe.getAmplifier() + 500, 0, true));
+			int duration = pe.getDuration();
+			event.entityLiving.removePotionEffect(StalkerMod.potion_bleeding.id);
+			event.entityLiving.addPotionEffect(new PotionEffect(StalkerMod.potion_bleeding.id, duration + 500, 0, true));
 		} else {
 			event.entityLiving.addPotionEffect(new PotionEffect(StalkerMod.potion_bleeding.id, 600, 0, true));
 		}

@@ -1,4 +1,4 @@
-package timaxa007.stalker;
+package timaxa007.stalker.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+import timaxa007.stalker.StalkerMod;
 
 public class ItemMedicine extends Item {
 
@@ -13,10 +14,10 @@ public class ItemMedicine extends Item {
 	public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player) {
 		PotionEffect pe = player.getActivePotionEffect(StalkerMod.potion_bleeding);
 		if (pe != null) {//то что он есть и каждые полСекунды
-			int amplifier = pe.getAmplifier();
+			int duration = pe.getDuration();
 			player.removePotionEffect(StalkerMod.potion_bleeding.id);
-			if (amplifier >= 620)
-				player.addPotionEffect(new PotionEffect(StalkerMod.potion_bleeding.id, amplifier - 600));
+			if (duration >= 620)
+				player.addPotionEffect(new PotionEffect(StalkerMod.potion_bleeding.id, duration - 600));
 			//world.playSoundAtEntity(player, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 			if (!player.capabilities.isCreativeMode) --itemStack.stackSize;
 		}

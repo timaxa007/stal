@@ -20,6 +20,7 @@ import timaxa007.stalker.entity.EntityTest;
 import timaxa007.stalker.event.EventsFML;
 import timaxa007.stalker.event.EventsForge;
 import timaxa007.stalker.item.ItemDetector;
+import timaxa007.stalker.item.ItemMedicine;
 import timaxa007.stalker.item.ItemMetaMorph;
 import timaxa007.stalker.network.SyncStalkerPlayerMessage;
 import timaxa007.stalker.network.TraderEntityIdMessage;
