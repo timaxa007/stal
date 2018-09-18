@@ -12,17 +12,17 @@ public class EntityAnomaly extends Entity {
 
 	@Override
 	protected void entityInit() {
-		
+
 	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		
+
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		
+
 	}
 
 }

@@ -4,8 +4,10 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -47,6 +49,20 @@ public class EventsForge {
 			SyncStalkerPlayerMessage message = new SyncStalkerPlayerMessage();
 			message.nbt = nbt;
 			StalkerMod.network.sendTo(message, player);
+		}
+	}
+
+	@SubscribeEvent
+	public void bleedingAddEffect(LivingHurtEvent event) {
+		if (event.entity.worldObj.isRemote) return;
+		if (event.source == StalkerMod.damage_bleeding) return;
+		//if (event.source.isUnblockable()) return;
+
+		PotionEffect pe = event.entityLiving.getActivePotionEffect(StalkerMod.potion_bleeding);
+		if (pe != null) {
+			event.entityLiving.addPotionEffect(new PotionEffect(StalkerMod.potion_bleeding.id, pe.getAmplifier() + 500, 0, true));
+		} else {
+			event.entityLiving.addPotionEffect(new PotionEffect(StalkerMod.potion_bleeding.id, 600, 0, true));
 		}
 	}
 

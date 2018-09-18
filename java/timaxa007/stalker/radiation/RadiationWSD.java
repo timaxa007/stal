@@ -13,6 +13,9 @@ public class RadiationWSD extends WorldSavedData {
 
 	public static final String ID = "RadiationWSD";
 	private World world;
+	
+	//public final ArrayList loaded = new ArrayList(), unloaded = new ArrayList();
+	
 	public final ArrayList<RadiationChunk>
 	loadedChunk = new ArrayList<RadiationChunk>(),
 	unloadedChunk = new ArrayList<RadiationChunk>();
@@ -33,7 +36,7 @@ public class RadiationWSD extends WorldSavedData {
 		else
 			radiationPointsWorld.add(new RadiationPoint(xCoord, yCoord, zCoord, radius, radMax));
 	}
-	
+
 	@Deprecated
 	public void createRadiationPointChunk(final net.minecraft.util.Vec3 vec3, final float radius, final int radMax) {
 		createRadiationPointChunk(vec3.xCoord, vec3.yCoord, vec3.zCoord, radius, radMax);
@@ -165,7 +168,7 @@ public class RadiationWSD extends WorldSavedData {
 					point.setInteger("radMax", rp.radiationMax);
 					points.appendTag(point);
 				}
-				tag.setTag("points", points);
+				if (points.tagCount() > 0) tag.setTag("points", points);
 
 				list.appendTag(tag);
 			}
@@ -192,8 +195,7 @@ public class RadiationWSD extends WorldSavedData {
 					point.setInteger("radMax", rp.radiationMax);
 					points.appendTag(point);
 				}
-				if (points.tagCount() > 0)
-					tag.setTag("points", points);
+				if (points.tagCount() > 0) tag.setTag("points", points);
 				list.appendTag(tag);
 			}
 

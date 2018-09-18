@@ -24,7 +24,7 @@ public class ItemStalkerUse extends ItemStalker {
 				if ((n = getParameter(nbt, key)) != 0) {
 					if (key.getProtection()) continue;
 
-					
+
 					n = 0;
 				}
 			}

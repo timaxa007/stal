@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 public class ProxyCommon implements IGuiHandler {
 
 	public void preInit() {
-		
+
 	}
 
 	@Override

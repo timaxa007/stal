@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import timaxa007.stalker.StalkerPlayerIEEP;
 import timaxa007.stalker.StalkerMod;
+import timaxa007.stalker.StalkerPlayerIEEP;
 import timaxa007.stalker.network.TraderEntityIdMessage;
 
 public class EntityTest extends EntityLiving {

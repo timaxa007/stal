@@ -8,7 +8,7 @@ public class ProxyClient extends ProxyCommon {
 
 	@Override
 	public void preInit() {
-		
+
 	}
 
 	@Override

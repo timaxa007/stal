@@ -2,10 +2,12 @@ package timaxa007.stalker.event;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.potion.PotionEffect;
+import timaxa007.stalker.StalkerMod;
 import timaxa007.stalker.StalkerPlayerIEEP;
 import timaxa007.stalker.radiation.RadiationChunk;
-import timaxa007.stalker.radiation.RadiationWSD;
 import timaxa007.stalker.radiation.RadiationPoint;
+import timaxa007.stalker.radiation.RadiationWSD;
 import timaxa007.stalker.register.Parameters;
 
 public class EventsFML {
@@ -40,5 +42,18 @@ public class EventsFML {
 		default:break;
 		}
 	}
-
+/*
+    @SubscribeEvent
+    public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
+        switch(event.phase) {
+        case END:
+            PotionEffect pe = event.player.getActivePotionEffect(StalkerMod.potion_bleeding);
+            if (pe != null && pe.getAmplifier() % 10 == 0) {//то что он есть и каждые полСекунды
+                event.player.attackEntityFrom(StalkerMod.damage_bleeding, 1F);
+            }
+            break;
+        default:break;
+        }
+    }
+*/
 }
