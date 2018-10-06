@@ -17,6 +17,7 @@ public class PotionBleeding extends PotionAttackDamage {
 
 	@Override
 	public void performEffect(EntityLivingBase entity, int amplifier) {
+<<<<<<< HEAD
 		PotionEffect pe = entity.getActivePotionEffect(this);
 		if (pe == null) return;
 		int lvl_20 = pe.getAmplifier() % 20;
@@ -25,6 +26,11 @@ public class PotionBleeding extends PotionAttackDamage {
 			entity.attackEntityFrom(StalkerMod.damage_bleeding, 0.5F + (float)(pe.getAmplifier() / 20) / 2F);
 		else if (pe.getDuration() % tt == 0)
 			entity.attackEntityFrom(StalkerMod.damage_bleeding, 0.5F + (float)(pe.getAmplifier() / 20) / 2F);
+=======
+		if (amplifier % 10 == 0) {
+			entity.attackEntityFrom(StalkerMod.damage_bleeding, 1F);
+		}
+>>>>>>> 8ade802d5dfc4a90bbf1693f34c793f5eeef01a7
 	}
 
 }
