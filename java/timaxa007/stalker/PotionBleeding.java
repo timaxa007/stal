@@ -2,6 +2,7 @@ package timaxa007.stalker;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionAttackDamage;
+import net.minecraft.potion.PotionEffect;
 
 public class PotionBleeding extends PotionAttackDamage {
 
@@ -16,8 +17,14 @@ public class PotionBleeding extends PotionAttackDamage {
 
 	@Override
 	public void performEffect(EntityLivingBase entity, int amplifier) {
-		if (amplifier % 10 == 0) {
-			//entity.attackEntityFrom(StalkerMod.damage_bleeding, 1F);
-		}
+		PotionEffect pe = entity.getActivePotionEffect(this);
+		if (pe == null) return;
+		int lvl_20 = pe.getAmplifier() % 20;
+		int tt = 200 - (10 * (lvl_20));
+		if (tt <= 0)
+			entity.attackEntityFrom(StalkerMod.damage_bleeding, 0.5F + (float)(pe.getAmplifier() / 20) / 2F);
+		else if (pe.getDuration() % tt == 0)
+			entity.attackEntityFrom(StalkerMod.damage_bleeding, 0.5F + (float)(pe.getAmplifier() / 20) / 2F);
 	}
+
 }
